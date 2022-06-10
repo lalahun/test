@@ -1,0 +1,1529 @@
+select * from tab;
+
+select * from CUSTOM;
+
+select * from DIVISION; 
+--데이터 <  행(row(record) < 테이블() 열(세로)columnv필드     로우와컬럼 짝  레코드와필드가 짝    가로는레코드 세로는컬럼이라고많이얘기한다 테이블들을저장하는공간 테이블스페이스 
+
+
+/*
+1. query
+   select data검색어 
+   데이터 꺼내는데 사용 
+
+2. dml(data maipulation language)
+    insert, update, delete
+    
+3. ddl(data difinition language)
+    create, alter(ADD,MODIFY,DROP), drop, rename
+    
+4. tcl(transaction control language)
+    commit(save), rollback
+    
+5. dcl(data control language)
+    grant권한줄때, revoke권한 뺏을때
+ */
+    
+ 
+ select * from tab;
+ 
+ select * from personnel;
+ select * from DIVISION;
+ select * from PAYGRADE;
+ select * from BONUS;
+ 
+ select * from PERSONNEL; --별표시는 모든걸 다 가져와라 
+ 
+ select PNO,PNAME,PAY,DNO from PERSONNEL;
+ 
+ select PAY,DNO,PNO,PNAME from PERSONNEL;
+ 
+ select distinct job from PERSONNEL;    --distinct 중복값제거 
+ 
+ --정렬
+ SELECT pno,pname,pay from PERSONNEL   --정렬되는 데이터는 입력된 순서 
+ order by pay asc; --오름차순 
+ 
+ SELECT pno,pname,pay from PERSONNEL   --asc는 생략가능 
+ order by pname; 
+ 
+ SELECT pno,pname,pay from PERSONNEL   --정렬되는 데이터는 입력된 순서 
+ order by pay desc; --내림차순
+ 
+ select * from PERSONNEL
+ order by startdate desc;
+ 
+ --사원번호가 높은 순서대로 정렬하시오
+ select * from PERSONNEL
+ order by pno desc;
+ 
+ select * from PERSONNEL;
+ desc personel;
+ 
+ describe personnel;
+ 
+ select pno,pname,pay,pay+1000 AS "보너스" from PERSONNEL; --pay+100 파생열 파생컬럼 실제로 존재하지 않음
+ 
+ select pno,pname,pay,pay+1000  "보너스" from PERSONNEL --AS는 생략이 가능 
+ order by pay+1000;
+ 
+ --오더바이는 별칭을 쓸 수 있고 다른건 쓸 수 없다 
+ select pno,pname,pay,pay+1000  "보너스" from PERSONNEL
+ ORDER BY 보너스;
+ 
+ select pno,pname,pay,pay+1000  "보너스" from PERSONNEL ORDER BY 4;
+ 
+ SELECT * FROM PERSONNEL
+ ORDER BY 4;
+  
+ SELECT DNO,PNO,PNAME FROM PERSONNEL
+ ORDER BY DNO DESC,PNO ASC;
+ --어센딩 어센딩으로  되어있음 디센딩으로 하고싶으면 뒤에 넣어주면 됨
+ 
+  SELECT * FROM PERSONNEL
+ ORDER BY DNO ,PNO DESC; --앞에데이터를 기준으로 뒤에데이터 설정 오더바이일때만 해당 
+ 
+ --NULL  널은 작은 값에서 큰 값으로 정렬할때 가장 마지막에 나옴 
+ SELECT * FROM PERSONNEL
+ ORDER BY MANAGER ASC;   --작은값에서 큰 값으로 정렬
+ 
+ SELECT * FROM PERSONNEL
+ ORDER BY MANAGER DESC;
+ 
+ --사원의 급여와 일년치 연봉(ANNUAL)을 구하시오
+ 
+ select dno,pno,pay,(pay*12)+nvl(BONUS,0) annuar_pay from PERSONNEL;
+ 
+ select pay,pay-500 from PERSONNEL;
+ 
+ select pname || ' ' || pno from PERSONNEL; --컬럼의 값 연결시 사용 문자는작은따옴표 주석은큰따옴표 
+ 
+ select pno,pname from PERSONNEL; --열제한
+ 
+ select * from PERSONNEL --조건절
+ where JOB = 'SALESMAN'; --소문자로입력하면 안나온다 
+ 
+ select * from PERSONNEL 
+ where JOB = 'salesman'; --x 오라클은소문자는대문자로 들어간다 
+ 
+ --연산자
+-- =, >, <, <=, >=, <> --맨끝꺼는 같지않다
+ 
+ --급여가 1600인 사원을 검색하시오
+ SELECT * FROM PERSONNEL
+ WHERE PAY =1600;
+ 
+ --사원번호가 1116인 사원을 검색하시오
+ SELECT * FROM PERSONNEL
+ WHERE PNO =1116;
+ 
+ 
+ 
+--사원의 급여가 2000이하인 사원을 검색하시오
+ SELECT * FROM PERSONNEL
+ WHERE PAY <2000;
+ 
+ --1990년 12월 17일에 입사한 사원 
+ SELECT * FROM PERSONNEL WHERE STARTDATE='1990/12/17';
+ SELECT * FROM PERSONNEL WHERE STARTDATE='1990-12-17';
+ 
+ SELECT * FROM NLS_SESSION_PARAMETERS;
+ 
+ --RR/MM/DD (YY/MM/DD) 연월일 
+ 
+ --업무가 CLERK인 사원을 찾으시오 
+ 
+ SELECT * FROM PERSONNEL WHERE JOB = 'CLERK';
+ 
+ --이름이 JAMES인 사원을 찾으시오
+ SELECT * FROM PERSONNEL WHERE PNAME = 'JAMES';
+ 
+ --논리연산자
+ --AND, OR, NOT(!)
+ 
+ --AND 
+ --부서번호가 10번이고 급여가 3000이상은 사원을 찾으시오
+ SELECT * FROM PERSONNEL WHERE DNO=10 AND PAY>=3000; --조건 두개가 모두 만족해야함
+ 
+ SELECT * FROM PERSONNEL WHERE JOB='SALESMAN' AND STARTDATE>='1991-01-01';
+ SELECT * FROM PERSONNEL WHERE JOB='SALESMAN' AND STARTDATE>'1990-12-31';
+ --91년 9월에 입사한 직원을 찾으시오
+ SELECT * FROM PERSONNEL WHERE STARTDATE>='1991-09-01' AND STARTDATE<='1991-09-30'; 
+ 
+--OR 한쪽만 만족하면 된다
+--부서번호가 10번이거나 급여가 3000이상은 사원을 찾으시오
+SELECT * FROM PERSONNEL
+WHERE PAY>3000 OR DNO=10;
+
+--직업이 MANAGER이거나 90년 이전에 입사한 직원을 찾으시오 
+SELECT * FROM PERSONNEL WHERE JOB='MANAGER' OR STARTDATE<'1990/01/01';  
+ 
+ --NOT(문자열 연산자)
+ --업무가 SALESMAN,CLERK인 직원을 찾으시오
+ SELECT * FROM PERSONNEL WHERE JOB='SALESMAN' OR JOB='CLERK';
+ SELECT * FROM PERSONNEL WHERE JOB IN('SALESMAN','CLERK');
+ 
+ --SALESMAN이 아니면서 CLERK이 아닌 직원을 찾으시오
+ SELECT * FROM PERSONNEL WHERE JOB<>'SALESMAN' AND JOB<>'CLERK';
+ SELECT * FROM PERSONNEL WHERE JOB NOT IN ('SALESMAN','CLERK');
+ 
+ --급여가 1000에서 2000인 사원을 찾으시오
+ SELECT * FROM PERSONNEL WHERE PAY>=1000 AND PAY<=2000;
+ 
+ SELECT * FROM PERSONNEL WHERE PAY BETWEEN 100 AND 2000; --문자연산자  반대로 쓸 순 없다
+ 
+ SELECT * FROM PERSONNEL WHERE STARTDATE BETWEEN '1991/09/01' AND '1991/09/30';
+ 
+ SELECT * FROM PERSONNEL WHERE DNO NOT IN(20,30); --20번과 30번을 찾아라
+
+ SELECT * FROM PERSONNEL WHERE DNO NOT BETWEEN 20  AND 30; --20번부터 30번까지 찾아라 사이값이 있다며 그 값까지 나온다 
+ 
+ --91년 5월 1일부터 92년 2월24일 사이에 입사한 사원이 아닌 직원을 찾으시오
+ 
+ SELECT * FROM PERSONNEL WHERE STARTDATE NOT BETWEEN '91-05-01' AND '92-02-24';
+ 
+ --이름이 A로 시작되는 사원정보를 찾으시오
+ SELECT * FROM PERSONNEL WHERE PNAME LIKE 'A%'; --같은 문자를 찾을때는 LIKE를 써준다 아닐때는 =는 A%를 찾는것 
+ 
+ --사원번호가 111_인 사원을 찾으시오 (다음엔 어떤문자가 와도 좋고 전체자리수가 4자리)
+ SELECT * FROM PERSONNEL WHERE PNO LIKE '111_';   --언더바자리만 한자리일때 
+ 
+ SELECT * FROM PERSONNEL WHERE PNO LIKE '111%';  --퍼센트는 뒤에 여러자리일때 EX)111232
+ 
+ SELECT * FROM PERSONNEL WHERE PNO LIKE '1__1'; --전체 4자리이면서 가운데 어떤게 와도 상관이없다 
+ 
+ --90년도에 입사한 사원을 찾으시오
+ SELECT * FROM PERSONNEL WHERE STARTDATE LIKE '90%';
+ 
+ SELECT * FROM PERSONNEL WHERE REGEXP_LIKE(PNO,'11[^2]'); --정규화표현식으로 구분  ^는2가 아니라는 뜻 
+ 
+ SELECT * FROM PERSONNEL WHERE REGEXP_LIKE(PNO,'1[1,2]');    --[^숫자] 예를들면 126이면 1 2 6각각 그리고 126으로 이루어진 숫자들이 지워짐 
+ 
+ --이메일에서 아이디 추출하기
+ SELECT REGEXP_SUBSTR('SUZI@NAVER.COM','[^@]+') 아이디 FROM DUAL;   --
+ 
+ SELECT * FROM DUAL; 
+ 
+ SELECT 100+300 FROM DUAL;  --듀얼은 오라클에만 있다 한번만 쓴다 
+ 
+ --NULL
+ SELECT MANAGER FROM PERSONNEL;
+ 
+ SELECT * FROM PERSONNEL WHERE MANAGER = NULL; --X  MXSQL은 이렇게 찾을수있게끔 옵션을 바꿀 수 있다
+ 
+ SELECT * FROM PERSONNEL WHERE MANAGER 'NULL';  --X NULL이라는 문자를 찾으라는 것이다
+  --널인 데이터 찾기 
+ SELECT * FROM PERSONNEL WHERE MANAGER IS NULL;
+  --널이 아닌 데이터 찾기
+ SELECT * FROM PERSONNEL WHERE MANAGER IS NOT NULL;
+  
+  
+  
+  
+  --2022-01-24
+ --우선 순위  
+ --업무가 'MANAGER'이고 급여가 1500이상인 사원 또는 업무가
+ --'SALESMAN'인 사원의 정보를 찾으시오
+ 
+ SELECT * FROM PERSONNEL WHERE (JOB = 'MANAGER' AND PAY>=1500) OR JOB='SALESMAN'; 
+--가로로 먼저 묶은거부터 연산이 된다 
+
+
+--업무가 'PRESIDENT' 또는 'SALESMAN'이고 급여가 1500이상인 사원의 정보를 찾으시오
+
+ SELECT * FROM PERSONNEL WHERE JOB IN('PRESIDENT', 'SALESMAN') AND PAY>=1500; 
+  
+ --함수
+ 
+ --숫자함수
+ --ROUND(반올림)
+ SELECT ROUND(45.275,1) FROM DUAL;  --45.3
+ SELECT ROUND(45.275,-1) FROM DUAL;  --50
+ --반올림 자릿수개념 
+ --  1  2  3  4  .  5  6  7
+ -- -4 -3 -2 -1  0  1  2  3
+ 
+ SELECT PNO,PNAME,PAY,ROUND(PAY,-2) FROM PERSONNEL;  -- -2가 10의 자리는 반올림 해라 
+ 
+ --TRUNC(절삭) 소수점 컨트롤 가능
+ SELECT TRUNC(45.245,2) FROM DUAL;  --45.24
+ SELECT TRUNC(45.245,-1) FROM DUAL; --40
+ 
+  SELECT PNO,PNAME,PAY,TRUNC(PAY,-2) FROM PERSONNEL;
+ 
+ --CEIL/FLOOR(올림/내림): 정수만 반환 자릿값이 없음 무조건 올리고 내림
+ SELECT CEIL(461.21) FROM DUAL; --462
+ SELECT FLOOR(461.91) FROM DUAL;  --461 
+ 
+ --MOD(나머지)
+ SELECT MOD(10,3) FROM DUAL; --1  10나누기3 나머지1
+ 
+ --ABS(절대값)
+SELECT ABS(-123) FROM DUAL; --실제로는 컬럼이름과 그 이름이 있는 테이블을 써야함
+ 
+ 
+ --SIGN(양수 1, 음수-1 0은 0)
+SELECT SIGN(100), SIGN(-1),SIGN(0) FROM DUAL;
+
+ --POWER(지수)
+SELECT POWER(2,4)  FROM DUAL; --2의 4승값
+
+ --SQRT(제곱근) --루트
+SELECT SQRT(9) FROM DUAL; 
+
+
+--문자함수
+--UPPER(소문자 --> 대문자)
+SELECT UPPER('oracle') FROM DUAL;
+--LOWER(대문자 --> 소문자)
+SELECT UPPER('oRAcLE') FROM DUAL;
+
+SELECT DNO,DNAME FROM DIVISION
+WHERE DNAME=UPPER('sales'); --데이터하나만 데이터바꿔서 비교
+
+SELECT DNO,DNAME FROM DIVISION
+WHERE LOWER(DNAME)='sales';   --기존데이터 모두 비교해서 소문자로 바꿔서 비교하는 것이기 때문에 느리다
+--이런것들을 잘 잡아주는 것을 튜닝이라고 한다  튜닝의 종류는 두가지이다 
+--1.시스템튜닝(하드웨어적)  2.SQL튜닝(회사쓰는 쿼리 바꿔주는 작업  P/L SQL 이프문줘서 할 수 있다 
+
+
+--INITCAP(첫번째 문자는 대문자로)
+SELECT INITCAP ('KOREA FIGHTING') FROM DUAL;
+
+--CONCAT(두 단어를 합침)
+SELECT PNAME || DNO FROM PERSONNEL;
+SELECT CONCAT(PNAME,DNO) FROM PERSONNEL;
+
+--LENGTH(길이)
+SELECT LENGTH ('KOREA FIGHTING') FROM DUAL; --14
+
+--SUBSTR
+SELECT SUBSTR('ABCDEFG',1,3) FROM DUAL; --ABC  인덱스값 0123456,ABCDEFG 첫번째부터 3자
+SELECT SUBSTR('ABCDEFG',3,2) FROM DUAL; --CD   C부터 2개
+SELECT SUBSTR('ABCDEFG',-3,2) FROM DUAL; --EF   뒤에서3번째부터 두개
+SELECT SUBSTR('ABCDEFG',-4) FROM DUAL; --DEFG   뒤에서 네번째
+
+--INSTR
+SELECT INSTR('ABCDEFG', 'C') FROM DUAL;  --ABCDEFG에서 C의 위치
+
+SELECT INSTR('AAAAAAA', 'A') FROM DUAL; --1
+SELECT INSTR('AAAAAAA', 'a') FROM DUAL; --0  찾는값이 없을때는 -0부터 나ㅗㅇㄴ다 
+
+--RPAD / LPAD
+SELECT RPAD(PNAME,15,'*') FROM PERSONNEL;   --15자리중 모자른 부분을 별을 더하라
+
+--RTRIM / LTRIM(공백제거)
+SELECT RTRIM('ABBBBB', 'B') FROM DUAL; --B를 다 제거 
+SELECT RTRIM('A     ', ' ') FROM DUAL;
+
+SELECT RTRIM('ABBABB', 'B') FROM DUAL; --오른쪽에서 부터 B를 지우는데 A를 만나면 멈춘다
+ 
+ --날짜함수 (연산이 가능하다)
+ --SYSDATE(GETDATE())   --오늘 날짜를 읽어와라
+ SELECT SYSDATE FROM DUAL;
+
+  SELECT SYSDATE +4  FROM DUAL;
+
+SELECT STARTDATE-1, STARTDATE, STARTDATE+1 FROM PERSONNEL;
+
+--KIM 사원이 오늘까지 근무한 년수를 구하시오
+
+SELECT SYSDATE,STARTDATE,CEIL((SYSDATE-STARTDATE)/365) || '년차' YEARS
+FROM PERSONNEL WHERE PNAME='KIM';
+
+--ROUND 
+SELECT STARTDATE,ROUND(STARTDATE,'YEAR') FROM PERSONNEL; --6월30일이 지난 데이터는 다음해 1월1일이 됨
+SELECT STARTDATE,ROUND(STARTDATE,'MONTH') FROM PERSONNEL; --16일기준
+SELECT STARTDATE,ROUND(STARTDATE,'DAY') FROM PERSONNEL;  --낮 12시기준 
+
+--TRUNC
+SELECT STARTDATE,TRUNC(STARTDATE,'MONTH') FROM PERSONNEL; --날자도 절삭가능하다 
+
+--MONTHS_BETWEEN
+SELECT ROUND (MONTHS_BETWEEN(SYSDATE,'2002/06/01')/12)YEAR FROM DUAL;
+
+--LAST_DAY
+SELECT STARTDATE,LAST_DAY(STARTDATE) FROM PERSONNEL;
+
+--NEXT_DAY
+SELECT NEXT_DAY(SYSDATE,'토요일') FROM DUAL; --다음토요일 
+
+--ADD_MONTHS
+ SELECT ADD_MONTHS(SYSDATE,4) FROM DUAL;
+ SELECT ADD_MONTHS(SYSDATE,24) FROM DUAL;
+ 
+ --변환함수
+ --TO_CHAR(숫자나 날짜를 문자로 변경)
+ 
+ --MM : 달수(10)
+ --MON : 3문자 달이름(MAR)
+ --MONTH: 달의 풀네임(MARCH)
+ --DD: 달의 날짜수(22)
+ --D: 주의 일수(2)
+ --DY: 3문자 요일이름(MON)
+ --DAY: 일의 풀네임 
+ --YYYY: 연도(2022)
+ --YY: 2자리연도(22)
+ --RM: 로마식 달수
+ 
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'D')FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'DY')FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'RM')FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'MON')FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'DAY')FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'YYYY-MM--DD')FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'DD--MM-YY')FROM DUAL;
+ 
+ --시간형식
+ /*
+ HH,HH12: 12시간
+ HH24: 24시간
+ MI: 분
+ SS: 초
+ SSSS: 초의 자리수
+ AM, PM: 오전 오후
+ A.M P.M 오전 오후 
+ */
+ SELECT TO_CHAR(SYSDATE, 'HH24:MI:SS') FROM DUAL;   --CHAR 자바에서 ToString과 같음
+ SELECT TO_CHAR(SYSDATE, 'AM HH:MI:SS') FROM DUAL;
+ 
+ --숫자형식
+ /*
+ 9 : 자리수(9999-->1218)
+ 0 : 자리수가 비면 0으로 표시(09999 ->01234)
+ PR : 음수(9999,PR--><1234>)   음수는 뾰족한괄호로 표시 
+ , :천자리수(9,999-->1,000) 
+ */
+ 
+ SELECT TO_CHAR(12506,'$099,999.99') FROM DUAL;
+ 
+ --서수
+ --SP,TH
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'DD') FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'DDSP') FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'DDTH') FROM DUAL;
+ SELECT SYSDATE, TO_CHAR(SYSDATE,'DDSPTH') FROM DUAL; 
+ 
+ --TO DATE
+ SELECT TO_DATE ('22-01-24','YY-MM-DD')+10 FROM DUAL;   
+ SELECT TO_DATE ('13:38','HH24:MI') FROM DUAL;
+ 
+ --TO NUMBER (INTERER.PASAR이랑 같음) 문자(숫자)를 숫자로 변경
+ SELECT TO_CHAR('123')+ 100 FROM DUAL;
+ SELECT TO_CHAR('ABC')FROM DUAL; --X 실행할수 없다
+ 
+--NVL (값이 있으면 출력 없으면 0출력) 
+ SELECT BONUS,NVL(BONUS,0) FROM PERSONNEL;
+ 
+ SELECT MANAGER FROM PERSONNEL;
+ 
+ DESC PERSONNEL;
+ 
+ SELECT MANAGER,NVL(TO_CHAR(MANAGER),'NON MANAGER') FROM PERSONNEL;
+     --매니져의값이 있으면 쓰고 없으면 NON매니져로 집어 넣어라
+ 
+ --DECODE 
+ --각 사원의 급여를 부서번호가 10인경우 10%, 부서번호가 20인경우 20% 증가
+ --나머지부서는 30%를 증가시켜라
+ 
+ SELECT PNAME,BONUS,DNO,PAY,
+ DECODE(DNO,10,PAY*1.1,20,PAY*1.2,PAY*1.3) 인상분   --IF문과 비슷하게 사용가능
+ FROM PERSONNEL;
+ 
+ --급여가 3500이상인 경우에는 GRADE를 'GOOD'를 미만인 경우에는 'POOR를 출력하시오
+ 
+ SELECT PNAME,PAY,
+ DECODE(SIGN(PAY-3500),1,'GOOD','POOR') GRADE   --연산값이 양수이면 굿 아니면 푸어 
+ FROM PERSONNEL; 
+ 
+ --그룹함수 (여러개의데이터로부터 공통으로 추출해내는 데이터)
+ --COUNT     --반드시보여주는 데이터가 하나이다 
+ SELECT COUNT(*) FROM PERSONNEL;
+ 
+ --급여가 3000이상인 사원의 수 
+ 
+ SELECT COUNT(*)  FROM PERSONNEL  --여기에 PANAME를 찍으면 에러가 난다 
+ WHERE PAY>=3000;
+ 
+ 
+ SELECT COUNT(MANAGER) FROM PERSONNEL;  --NULL값을 세 수 없음
+ SELECT COUNT(BONUS) FROM PERSONNEL;
+ 
+ --AVG 평균
+ SELECT AVG(PAY) FROM PERSONNEL;
+ 
+ --SUM
+ SELECT SUM(PAY) FROM PERSONNEL;
+ 
+ --MAX/MIN
+ SELECT MAX(PAY),MIN(PAY) FROM PERSONNEL;
+ 
+ --사원중에 입사한지 가장 오래된 직원을 찾으시오 
+ SELECT * FROM PERSONNEL;
+ SELECT MIN(STARTDATE) FROM PERSONNEL;
+ 
+ 
+ --사원중에 입사한지 가장 오래된 사원과 신입사원과의 날수를 찾으시오
+ 
+ SELECT ROUND ((MAX(STARTDATE)-MIN(STARTDATE))/365) AS 년 FROM PERSONNEL;
+ 
+ 
+ --분석함수 
+ --각 부서별 평균 
+ 
+ SELECT DISTINCT DNO,AVG(PAY) OVER(PARTITION BY DNO)  --파티션 디엔오로 그룹지어서 거기에 평균을 구한 것 
+ FROM PERSONNEL; 
+ 
+ --월급12000을 받는 사람 순위
+ 
+ SELECT *FROM PERSONNEL ORDER BY PAY DESC;
+  
+ SELECT RANK(1200) WITHIN GROUP (ORDER BY PAY DESC) RANK  --ORDER BY 정렬 디센딩으로 정렬 
+ FROM PERSONNEL;
+ 
+ SELECT PNAME,PAY,RANK() OVER(ORDER BY PAY DESC) RANK  --페이를 디센딩으로 정렬한 후에 랭킹을 해라 
+ FROM PERSONNEL;    --이부분은 기억해두기 
+ 
+ --GROUP BY
+ SELECT PNAME FROM PERSONNEL; --다중값 반환쿼리
+ 
+ SELECT * FROM PERSONNEL WHERE PAY=1600;  --다중값 반환쿼리
+ 
+ SELECT COUNT(*) FROM PERSONNEL;  --단일값 반환 쿼리 무조건 하나나옴 
+ --다중값 단일값 같이 결과를 볼 수없다
+ 
+ SELECT PNAME,MIN(STARTDATE) FROM PERSONNEL;  --X PNAME은 다중값컬럼 MIN 단일값반환이기 때문에 에러
+ 
+ --하위쿼리
+ SELECT PNAME, STARTDATE FROM PERSONNEL
+ WHERE STARTDATE = (SELECT MIN(STARTDATE) FROM PERSONNEL); --나중에 할 것 
+ 
+ --부서별 평균 급여를 구하시오 
+ SELECT DNO,AVG(PAY) FROM PERSONNEL
+ GROUP BY DNO;
+ 
+ --GROUP BY
+ -- ~~별(나이별,직책별...)구하기 
+ 
+ 
+SELECT STARTDATE,
+EXTRACT(YEAR FROM STARTDATE)  년,
+EXTRACT(MONTH FROM STARTDATE) 월,
+EXTRACT(DAY FROM STARTDATE) 일
+
+
+
+FROM PERSONNEL;  --FROM 앞에는 쉼표쓰면 안된다 
+
+--각 부서의 평균 급여가 전체 평균급여보다(2972.5)보다 크면 'GOOD'
+--작으면 'POOR'로 출력하시오
+
+SELECT * FROM  PERSONNEL;
+
+
+SELECT AVG(PAY) FROM PERSONNEL;
+
+SELECT DNO,AVG(PAY),
+DECODE(SIGN(AVG(PAY)-
+(SELECT AVG(PAY) FROM PERSONNEL)),1,'GOOD','POOR') AS GRADE
+FROM PERSONNEL
+GROUP BY DNO
+
+--이 결과에다 조건문을 준다 
+    
+-- SELECT의 조건문은 WHERE 셀렉트에 의해 조건절이 같이실행
+-- GROUP BY의 조건문은 HAVING 
+ HAVING DNO =20; 
+ 
+--22년 1월25일 
+SELECT * FROM PERSONNEL;   --A피넘버와 B의 매니져의 번호가 같아야한다
+
+SELECT A.PNO 사원번호, A.PNAME 직원,B.PNO 관리자번호, B.PNAME 관리자
+FROM PERSONNEL A, PERSONNEL B
+WHERE A.MANAGER = B.PNO;
+
+--NON EQUI JOIN 
+
+SELECT * FROM PERSONNEL;
+SELECT * FROM PAYGRADE;
+
+SELECT PNAME,PAY,GRADE
+FROM PERSONNEL, PAYGRADE
+WHERE PAY BETWEEN LOWPAY AND HIGHPAY;   --컬럼 BETWEEN A AND B 
+ 
+ --기타(OPERATION) 
+ /*
+ A=[1,2,5,6]
+ B=[1,2,4]
+ 
+ A UNION ALL B=[1,2,5,6,1,2,4] 중복허용
+ A UNION B = [1,2,5,6,4]  중복허용X
+ A MINUS B = [5,6]
+ A INTERSECT B = [1,2]  
+ 
+ */
+ 
+ --UNION ALL 
+ SELECT * FROM PERSONNEL
+ UNION ALL
+ SELECT * FROM PERSONNEL;
+ 
+ --UNION 
+ SELECT * FROM PERSONNEL
+ UNION
+ SELECT * FROM PERSONNEL;
+ 
+ --MINUS 
+ SELECT DNO FROM DIVISION  --10,20,30,40
+ MINUS
+ SELECT DNO FROM PERSONNEL; --10,20,30
+ 
+ --INTERSECT
+ SELECT DNO FROM DIVISION  --10,20,30,40
+ INTERSECT
+ SELECT DNO FROM PERSONNEL;  --10,20,30
+ 
+ --PAIRWISE  (비교하는 컬럼을 쌍으로 묶은 후 비교) --오라클에밖에없음 
+ --부서번호 30인 사람의 
+ SELECT PNAME,DNO,PAY,BONUS FROM PERSONNEL
+ WHERE (PAY,BONUS) IN (SELECT PAY,BONUS FROM PERSONNEL WHERE DNO=30);
+
+ SELECT PNAME,DNO,PAY,NVL(BONUS,-1) FROM PERSONNEL
+ WHERE (PAY,NVL(BONUS,-1)) IN (SELECT PAY,NVL(BONUS,-1) FROM PERSONNEL WHERE DNO=30);
+
+
+ --MYSQL에서는 이렇게 사용한다 
+ SELECT PAY, BONUS FROM PERSONNEL WHERE DNO=30;
+
+ SELECT PNAME,DNO,PAY,BONUS FROM PERSONNEL
+ WHERE(PAY=160 AND BONUS=500) OR (PAY=1450 AND BONUS=300)
+ OR (PAY=1200 AND BONUS=0) OR (PAY=3550 AND BONUS IS NULL);
+ 
+ --dml(Data maipulation language)
+ --   insert , update, delete 
+ --CRUD    
+ 
+ SELECT * FROM DIVISION;
+ DESC DIVISION;
+ --DNO(NOT NULL)
+ --아무것도 없는 것은 값을 입력하지 않아도 된다
+ 
+ INSERT INTO DIVISION VALUES (50,'OPERATION','031-111-222','DAEGU');
+ --실행완료하면 50번데이터가 들어가있다 
+ --MSSQL에서는 INTO 생략가능한데 오라클에서는 반드시 써줘야한다 
+ 
+ --INSERT INTO DIVISION VALUES (60);  --60번을 4개의 컬럼 중 어디에 넣을건지에 대한 고민 
+ INSERT INTO DIVISION (DNO) VALUES (60);
+ 
+ INSERT INTO DIVISION (DNAME,POSITION) VALUES ('ACOUNT' , 'DAEJUN'); --낫 널부분은 반드시 포지션을 넣어줘야한다
+
+ INSERT INTO PERSONNEL (PNO,PNAME,PAY,DNO)
+ VALUES (7711,'YOUNG',4000,20);
+
+ --암시적 NULL삽입 값을 주지않으면   
+ SELECT * FROM PERSONNEL;
+ DESC PERSONNEL;
+ 
+--명시적 NULL삽입
+ INSERT INTO DIVISION VALUES(70,'PLANNING','012-333-4444', NULL);
+ INSERT INTO DIVISION VALUES(70,'PLANNING','012-333-4444', '');
+ 
+ 
+ SELECT * FROM DIVISION;
+ 
+ INSERT INTO PERSONNEL (PNO,PNAME,JOB,STARTDATE,DNO)
+ VALUES(1300,'CHO','SALESMAN',SYSDATE,10);
+ 
+ SELECT * FROM PERSONNEL;
+ 
+ SELECT STARTDATE, TO_CHAR(STARTDATE,'YYYY-MM-DD') NALJJA FROM PERSONNEL;
+ --NOT NULL이 있는 캐릭터만 값을넣어줘야한다 
+ 
+ --치환변수 
+ SELECT PNO,PNAME,JOB,STARTDATE,DNO
+ FROM PERSONNEL
+ --WHERE DNO=30; --끝에있는 값을 변수로 만들 수 있다 
+ WHERE DNO=&DIV_DNO; --&치환변수라는걸 알려주는 것
+ 
+ 
+ SELECT * FROM MANAGER;
+ SELECT * FROM SALESMAN;
+ SELECT * FROM BUSEO;   
+ SELECT * FROM DIVISION;
+ 
+ COMMIT; --SAVE의 기능이다 
+ 
+ SELECT * FROM SAWON; 
+ 
+ SELECT * FROM TAB;
+ 
+ SELECT * FROM BUSEO;
+ 
+ --SUBQUERY
+ SELECT * FROM MANAGER;
+ DESC MANAGER;
+ 
+ SELECT * FROM PERSONNEL
+ WHERE JOB='MANAGER';
+--SELECT한 결과를 INSERT시키겠다
+
+ INSERT INTO MANAGER(PNO,PNAME,PAY,STARTDATE)  
+ SELECT PNO,PNAME,PAY,STARTDATE FROM PERSONNEL
+ WHERE JOB='MANAGER';
+ 
+ SELECT * FROM MANAGER;
+ 
+ --업무가 SALESMAN인 사원의 모든 정보를 SALESMAN 테이블로 복사
+ SELECT * FROM SALESMAN;
+ WHERE JOB='SALESMAN';
+ 
+ INSERT INTO SALESMAN
+ SELECT * FROM PERSONNEL 
+ WHERE JOB = 'SALESMAN';  --서브쿼리로 인서트시키는 방법이다 
+ 
+ COMMIT; --인서트시키면 커밋해줘야한다 아래에 오토커밋이 오프로되어있는걸 온으로하면 커밋이 자동으로 실행된다
+  
+ --UPDATE 
+ --사원번호가 1111인 사원의 부서를 30으로 수정 
+ SELECT * FROM PERSONNEL WHERE PNO=1111;
+ UPDATE PERSONNEL SET DNO = 30
+ WHERE  PNO=1111;   -- 업데이트는 모든 조건절이 따라와야한다  조건이 없으면 다 변경
+ 
+ UPDATE PERSONNEL SET JOB='SALESMAN',MANAGER=1111,STARTDATE=SYSDATE,BONUS=200
+ WHERE PNO=7711;
+ 
+ SELECT * FROM PERSONNEL;
+ 
+ COMMIT;
+ 
+ SELECT * FROM SAWON;
+ 
+ UPDATE SAWON SET DNO=20;    --조건문을 쓰지 않으면 모든데이터가 다 변경된다  
+ 
+ ROLLBACK; --방금했던 작업이 취소된다 
+ 
+ --SUBQUERY로 수정
+ SELECT * FROM PERSONNEL
+ WHERE DNO = (SELECT DNO FROM DIVISION WHERE DNAME= 'SALES');  --세일즈의 부서번호가 30 
+ 
+ UPDATE PERSONNEL SET JOB = 'SALESMAN'
+ WHERE DNO = (SELECT DNO FROM DIVISION WHERE DNAME= 'SALES'); 
+ 
+ --위에문장을  셀렉트문을 조인문으로 바꿔봐라 
+ 
+ SELECT A.*
+ FROM PERSONNEL A, DIVISION B
+ WHERE A.DNO= B.DNO AND DNAME='SALES';
+ 
+ UPDATE PERSONNEL SET JOB = 'SALESMAN'
+ FROM PERSONNEL A, DIVISION B           --조인문의 조건문
+ WHERE A.DNO= B.DNO AND DNAME='SALES';  --ORACLE(X), MS-SQL(O)
+ --오라클에서는 조인문으로 업데이트를 할 수 없다
+ 
+ COMMIT;
+ 
+ --DELETE
+ --사원번호가 1300인 사원을 삭제하시오
+ SELECT * FROM PERSONNEL WHERE PNO=1300;
+ DELETE FROM PERSONNEL WHERE PNO=1300;
+ 
+ SELECT * FROM SAWON;
+ 
+ DELETE SAWON;
+  
+ ROLLBACK;
+ 
+  
+--부서명이 BUSAN인 부서의 부서번호를 찾아 그 부서에 해당하는 지권을 삭제하시오
+
+SELECT * FROM PERSONNEL
+WHERE DNO=(SELECT DNO FROM DIVISION WHERE POSITION = 'BUSAN');
+ 
+DELETE FROM PERSONNEL
+WHERE DNO=(SELECT DNO FROM DIVISION WHERE POSITION = 'BUSAN');
+ 
+ COMMIT;
+ 
+ --DML문장 실행시 에러가 나는 경우 
+ SELECT * FROM PERSONNEL;
+ DESC PERSONNEL;   --PNO는 NOT NULL이라 반드시 줘야함
+ 
+ INSERT INTO PERSONNEL (PNO,PNAME,DNO) VALUES(1300,'SONG',99);
+ 
+ SELECT * FROM USER_CONSTRAINTS;  --제약정보에 대한 조건만 넣어놓은 테이블 
+--PNO에는 제약조건이 들어가있다  (KIM.PERSONNEL_PNO_PK)
+--PRIMARY KEY: 중복X NULL X 하나의테이블당 한개의컬럼에만 만들 수 있다 다른 컬럼의 넣을 수 없음 EX)회사 사번 학번등
+--FOREIGN KEY :외부참조키 참조하는키값과 데이터타입이 똑같아야한다 참조하는 KEY는 PK 또는 UK
+--EX)학교에서 개강하는데 
+
+
+--UPDATE에러
+SELECT * FROM  DIVISION;    --디비젼의DNO 10 20 30 40 50의 값을     
+SELECT * FROM  PERSONNEL;   --퍼스널테이블의 DNO가 참조하고있음
+ --디비젼에 있는키를 퍼스널에 있는 키를 참고하려고함
+ 
+ UPDATE PERSONNEL SET DNO=90
+--부모키가 없다
+
+ 
+--DELETE 에러
+ DELETE DIVISION WHERE DNO=30;
+--고아데이터 자식레코드가 발견 그래서 해당데이터를 지울 수없음  
+ 
+ 
+ --TRANSACTION
+ --DML문장(INSERT, UPDATE,DELETE)시작시 자동으로 시작
+ --COMMIT,ROLLBACK로 명령을 줘야함
+ --TCL(TRANSACTION CONTROL LANGUAGE)
+ 
+--A계좌에서 B계좌로 5,000원 송금
+--1.A계좌확인 
+--2.A계좌잔액확인(10000원)
+--3.A계좌에서 5000원차감(5000원)
+--4.B계좌확인
+--5.B계좌 5000원송금
+--6.B계좌 잔액 확인(6000)
+--7.B계좌에 500원 증감(잔액11000원) 
+--8.완료 (COMMIT;)
+ --이 중 하나라도 실행이 안되면 에러발생 
+ --LOG파일에 저장(선기록 후조치) -TRANSACTION LOG
+ --취소(ROOLBACK)
+ 
+ --LOCK 락  
+ --비행기의 경우 A가 접속하면 다른 사람들은 접속불가 유일한데이터 비행기티켓권같은경우 
+ 
+ --AUTO COMMIT  취소가안된다
+ --DDL(CREATE,ALTER,DROP,RENAME)  만들고취소안되고 
+ --DCL(GRANT,REVOKE) 권한을 주거나 뺏은건 취소할 수 없다
+ 
+ 
+ SELECT * FROM TAB;
+ 
+ SELECT * FROM DIVISION;
+ 
+ --OBJECT: TABLE,INDEX,SYNONYM,SEQUENCE,VIEW 
+ 
+ /*
+ TABLE 
+ DATA TYPE 
+ CHAR:문자(고정길이) 빈공간을 무조건 가지고 있다-낭비가 심하다  규격화되서 데이터읽는 속도가 빠르다  PNO같은 컬럼을 쓴다 검색이 빠르기 때문에 
+ VARCHAR2: 문자(가변길이) 빈공간을 os에 반환을해준다-낭비되지않는다   주소같은곳에 사용 방명록(댓글) 메모등  단편화작업(CHAINING)
+ 캐릭터와 밸류어블캐릭터의 차이점?
+ 
+ NUMBER(P,S): 숫자
+ DATE: 날짜(고정길이)
+ LONG: 문자(가변길이,2GB)
+ */
+ 
+ CREATE TABLE BUSE01  --크리에이트는 오토커밋이라 롤백이 안된다
+ (DNO NUMBER(2),
+ --DNO는 숫자에 자릿수 두자리 99까지 들어갈 수있다
+ DNAME VARCHAR(14),
+ ZIPCODE CHAR(7));
+ 
+ SELECT * FROM BUSE01;
+ DESC BUSE01;
+ 
+ INSERT INTO BUSE01 VALUES (10,'AAA','123-123');
+ 
+ INSERT INTO BUSE01 VALUES (20,'BBB','222-333');
+ 
+ /*
+테이블이름
+1.영문자 시작(30자)
+2.영문자,숫자 사용가능(공백허용안함)
+3.특수문자는 _,$,#만 사용가능
+4.이름은 중복허용안함
+5.컬럼명이 틀려야함
+6.예약어(INSERT,VALUES같은) 사용못함
+
+
+--사용가능한 이름
+Sawon,P_NO,Division10,Name_Rule
+
+--사용불가능한 이름
+10division, $sal, p-no, Alter(예약어)
+
+ */
+ 
+ 
+CREATE TABLE CUSTOM    --고유값을 가지는 애를 하나 지정해주면된다 EX)ID 중복X,널값 허용X 테이블의 한곳에만 넣을 수 있다 프라이머리키에 의해 들어간 NOT NULL
+(ID CHAR(5) CONSTRAINT CUSTOM_ID_PK PRIMARY KEY,  --테이블의이름,컬럼의이름,제약조건의 이름  
+PWD CHAR(3),
+NAME CHAR(6),
+ADDR VARCHAR2(50),
+ZIP CHAR(5),
+BIRTH DATE,
+JUMIN CHAR(14),
+AGE NUMBER,
+TEL CHAR(10));
+
+DESC CUSTOM;
+INSERT INTO CUSTOM VALUES ('A001','123','SUZI','서울','12345','94-10-10','941010-2123456','27','0101231234');
+ 
+ SELECT * FROM CUSTOM;
+ INSERT INTO CUSTOM VALUES (NULL,'123','INNA','서울','12345','94-10-10','941010-2123456','40','0101231234');
+ 
+ INSERT INTO CUSTOM VALUES ('A001','123','INA','서울','12345',SYSDATE,'941010-2123456','27','0101231234');
+
+ 
+ DROP  TABLE CUSTOM; --테이블삭제
+ 
+ SELECT * FROM CUSTOM;
+ 
+ SELECT * FROM USER_CONSTRAINTS;
+
+ COMMIT;
+ 
+ CREATE TABLE SALESMAN1
+ AS
+ SELECT PNO,PNAME,JOB, PAY FROM PERSONNEL
+ WHERE JOB= 'SALESMAN';
+
+DROP TABLE SALESMAN1;
+
+SELECT * FROM SALESMAN1;
+
+CREATE TABLE MANAGER1
+AS SELECT * FROM PERSONNEL WHERE JOB= 'MANAGER';
+
+SELECT * FROM MANAGER1;
+
+CREATE TABLE PAY3000
+AS
+SELECT * FROM PERSONNEL WHERE PAY>=3000;
+-- PAY3000테이블 만듦
+
+SELECT * FROM PAY3000;
+
+--특정테이블이 이대로 복사되서 새로운 테이블이 만들어짐 
+--이미만들어진 테이블은 인서트 에즈안씀 크리에이트는 에즈씀
+
+--PERSONNEL 테이블에서 12월달에 입사한 직원들의 데이타를
+--MON12이란 테이블로 복사
+SELECT * FROM PERSONNEL;
+
+CREATE TABLE MON12
+AS
+SELECT FROM PERSONNEL; 
+WHERE TO_CHAR(STARTDATE,'MM')=12; 
+
+SELECT * FROM MON12;
+
+
+CREATE TABLE ANALYST (NUM,NAME,JOB,DNUM)
+AS
+SELECT PNO,PNAME,JOB,DNO FROM PERSONNEL
+WHERE JOB='ANALYST';
+
+SELECT * FROM ANALYST;
+
+--부서번호가 10인 부서의 총급여의 정보를 DIV10 테이블로 만드시오
+CREATE TABLE DIV10
+AS 
+SELECT DNO,SUM(PAY) SUM_PAY FROM PERSONNEL 
+GROUP BY DNO
+HAVING DNO=10;
+
+SELECT * FROM DIV10;
+
+--테이블의 구조만 복사
+SELECT * FROM PERSONNEL;
+
+CREATE TABLE SAWON1
+AS
+SELECT * FROM PERSONNEL
+WHERE 0=1; --퍼스널데이터 복사하고 데이터는 만들지 않는다
+
+SELECT * FROM SAWON1;
+
+DESC PERSONNEL; --NOT NULL이 복사가 안된게 아니라 프라이머리키가 복사가 되지않음
+DESC SAWON1;  --제약조건은 복사되지 않는다 프라이머리키는 따로 만들어줘야한다 
+
+--테이블 변경 
+--크리에이트는 오브젝트를 만들때 쓴다고 했는데 
+
+SELECT * FROM SALESMAN1;
+DESC SALESMAN1; --아래에 컬럼하나 추가 
+
+ALTER TABLE SALESMAN1
+ADD (DNO NUMBER(2));             --컬럼추가 ADD --컬럼바꿀꺼면 ALTER   --테이블변경 명령어는 회사에서는 거진 쓸 일이없음 
+
+SELECT * FROM SALESMAN1;
+
+ALTER TABLE SALESMAN1
+ADD (JUMIN CHAR(14),ZIP CHAR(7));
+
+SELECT * FROM SALESMAN1; 
+
+ALTER TABLE SALESMAN1
+ADD BIGI VARCHAR2(10) DEFAULT('AA');  --제약조건 
+
+ALTER TABLE SALESMAN1
+ADD (MARRIAGE CHAR(8) CONSTRAINT SALESMAN1_MARRIAGE_CK
+CHECK (MARRIAGE IN ('SINGLE','MARRIED'))); 
+--체크 제약조건 체크 다음에 컬럼명  
+
+SELECT * FROM SALESMAN1;
+
+INSERT INTO SALESMAN1 VALUES 
+(111,'CHO', 'SALESMAN',2000,10,'11111','123-123','BB','SINGLE');
+
+INSERT INTO SALESMAN1 VALUES 
+(222,'CHO', 'SALESMAN',2000,10,'11111','123-123','BB','MARRIED');
+
+SELECT * FROM USER_CONSTRAINTS;
+--무결성이 깨졌다 신뢰가 깨졌다 제약조건을 쓰는거임 
+--프라이머리키랑 체크키랑 비슷하다고 보면 된다
+--프라이머리키 중복값 널값 허용안되고 하나만 사용가능
+--유니크키는 249개까지넣을 수 있다 그외에는 UK를 주면된다 
+--포린키 외부참조키 포린키는 참조하는컬럼 참조되어지는 컬럼은 똑같이 만들고  데이터타입이 같아야한다 
+--디폴트키는 등록일 같은거 내가값을 주지않아도 오늘날짜가 들어가는 경우 
+
+
+--관계형데이터베이스에 대해서 설명하시오 
+--표로 데이터를 저장 HTTP 파이퍼텍스트트랜스퍼프로토컬
+
+--학번이 똑같으면(프라이머리키) 조인문으로 셀렉가능
+
+--정규화는 테이블을 쪼개는 작업이다 그게 정규화이다 
+--ERD툴이 있다 써드파티 모델링하는방법  
+
+--프라이머리키 만들기
+DESC SALESMAN1; --퍼스널테이블에서 복사를 해왔기 때문에 PNO는들어와있으나 모든 제약조건이 복사가 안된다
+
+ALTER TABLE SALESMAN1 
+ADD CONSTRAINT  SALESMAN1_PNO_PK PRIMARY KEY(PNO);    --제약조건의 이름일뿐  -- 제약조건의 형태 T_C_O  
+
+SELECT * FROM SALESMAN1;
+
+
+SELECT * FROM MANAGER1;
+--MANAGER1 테이블에 COMM 컬럼을 NUMBER(5)로 추가
+ALTER TABLE MANAGER1
+ADD COMM NUMBER(5);
+
+--MANAGER1 테이블에 PNO 컬럼에 PK를 추가 
+ALTER TABLE MANAGER1
+ADD PRIMARY KEY(PNO);
+
+SELECT * FROM USER_CONSTRAINTS;
+                                        --오라클은 MODIFY MS는 ALTER 
+--------------------------------    
+--MODIFY(컬럼)
+SELECT *  FROM MANAGER1;
+DESC MANAGER1;
+
+ALTER TABLE MANAGER1
+MODIFY PNAME VARCHAR2(16);
+
+ALTER TABLE MANAGER1
+MODIFY PNAME VARCHAR2(7);  --이미데이터가 들어가있으면 그 데이터의 가장 큰 값으로 줄일 수 있다
+
+SELECT * FROM MANAGER1;
+
+--DROP(컬럼,제약조건)
+
+SELECT * FROM USER_CONSTRAINTS;
+
+ALTER TABLE MANAGER1
+DROP CONSTRAINT SYS_C007023;
+
+--------------------------------
+ALTER TABLE SALESMAN1 
+DROP CONSTRAINT SALESMAN1_PNO_PK;
+
+ALTER TABLE SALESMAN1 
+DROP PRIMARY KEY;                    --두개가 같은방법이다
+-----------------------------------
+
+ALTER TABLE DIVISION          ---참조키문제 
+DROP PRIMARY KEY CASCADE;          ---참조키까지 같이 강제삭제  
+
+SELECT * FROM USER_CONSTRAINTS;
+
+DESC SALESMAN1;
+
+SELECT * FROM SALESMAN1;
+
+ALTER TABLE SALESMAN1  
+DROP COLUMN MARRIAGE;
+
+--SET UNUSED --삭제는 하지 않지만 사용자에게 보여주지 않음 
+
+ALTER TABLE SALESMAN1
+SET UNUSED COLUMN DNO;
+
+SELECT * FROM SALESMAN1;
+
+ALTER TABLE SALESMAN1
+DROP UNUSED COLUMNS;
+
+SELECT * FROM TAB;
+
+DROP TABLE MANAGER1;
+
+SELECT * FROM RECYCLEBIN;  --스레기통확인
+
+SELECT OBJECT_NAME, ORIGINAL_NAME,DROPTIME FROM RECYCLEBIN;
+
+--복원
+-----------------------------------------------------------
+FLASHBACK TABLE MANAGER1 TO BEFORE DROP;
+
+FLASHBACK TABLE "BIN$Eatuz2DaTsyhFeuIb9SENg==$0" TO BEFORE DROP;  --스레기통의 오브젝트네임 두개가 같은것
+-----------------------------------------------------------
+
+SELECT * FROM "BIN$Eatuz2DaTsyhFeuIb9SENg==$0"
+
+DROP * FROM TAB;
+
+DROP TABLE SALESMAN1 PURGE; --바로삭제 못살려낸다
+
+PURGE RECYCLEBIN;  --휴지통비우기
+
+
+--TRUNCATE/DELETE
+
+SELECT * FROM PERSONNEL;
+--RECORD를 지우고 싶으면 DELETE  -- 로그파일 저장O 속도가 느림 ROLLBACK가능 
+
+DELETE PERSONNEL; 
+ 
+SELECT * FROM PERSONNEL; --데이터가 없다 
+
+ROLLBACK;     --INSERT UPDATE CREATE때만 사용
+
+SELECT * FROM PERSONNEL;
+--------------------------------------
+--TRUNCATE TABLE 완전삭제 되돌릴 수 없음 DB에 바로반영 로그파일 저장X 속도가 빠름 
+TRUNCATE TABLE PERSONNEL;--테이블을 지우는게 아니라 데이터를 지우는 것이다
+
+SELECT * FROM PERSONNEL;
+
+ROLLBACK;
+
+SELECT * FROM PERSONNEL;
+
+--RENAME
+SELECT * FROM TAB;   --TAB에서S는 관리자들이 쓰는 명령어 
+
+SELECT * FROM PAY3000;
+
+RENAME PAY3000 TO HIGHPAY; -이름바꾸기
+
+SELECT * FROM HIGHPAY;  --페이 3000으로 검색하면 안뜸 하이페이로 바꿔서 하이페이로 검색해야 뜸
+
+------------------------------------------------------------
+--5. dcl(data control language)
+    --grant권한줄때, revoke권한 뺏을때
+
+/*
+GRANT : USER나 OBJECT에 권한을 부여할때 사용
+REVOKE: USER나 OBJECT에 권한을 회수할때 사용
+*/
+
+CREATE USER TEST 
+IDENTIFIED BY TEST 
+DEFAULT TABLESPACE USERS
+TEMPORARY TABLESPACE TEMP; --권한이 불충분한 상태다 
+
+CREATE USER SUZI2
+IDENTIFIED BY SUZI2 
+DEFAULT TABLESPACE USERS
+TEMPORARY TABLESPACE TEMP;
+
+SELECT  * FROM DBA_USERS; --어떤계정들이 만들어진지 보는 명령어  제약조건에 대한 정보를 볼때는 USER 모든사용자가 -쓸 수 있는 명령어
+
+
+
+--OBJECT권한
+
+GRANT SELECT ON PERSONNEL TO SUZI;    --수지퍼스널데이터 셀릭트
+GRANT SELECT,INSERT,DELETE ON DIVISION TO SUZI;  --수지디비전데이터셀렉트
+ 
+SELECT * FROM PERSONNEL;
+ 
+COMMIT;
+
+SELECT * FROM USER_TAB_PRIVS_MADE; --누구한테 권한을 줬는지 나옴 
+
+
+--모든사용자에게 김이라는데이터를 셀렉트할 수 있는 권한을 준다
+GRANT SELECT ON KIM.DIVISION TO PUBLIC; --퍼블릭으로 준 권한은 퍼블릭으로가져와야한다
+-----------------------------------------
+REVOKE SELECT ON DIVISION FROM PUBLIC;
+
+REVOKE SELECT ON PERSONNEL FROM SUZI;
+
+
+REVOKE SELECT,INSERT,DELETE ON DIVISION FROM SUZI;
+
+SELECT * FROM USER_TAB_PRIVS_MADE; 
+
+--ROLE
+
+CREATE ROLE MANAGER;
+
+SELECT * FROM ROLE_SYS_PRIVS
+WHERE ROLE='MANAGER' OR ROLE = 'CONNECT' OR ROLE='RESOURCE';
+
+/*
+--제약조건(무결성)
+primary key
+foreign key
+uique key
+not null
+check
+*/
+
+CREATE TABLE CUSTOMER
+(ID NUMBER(4) CONSTRAINT CUSTOMER_ID_PK PRIMARY KEY,
+NAME VARCHAR2(10),
+NO NUMBER(4));
+
+SELECT * FROM USER_CONSTRAINTS;
+
+CREATE TABLE ORDERS 
+(NO NUMBER(4),
+SNO NUMBER(4),
+NAME VARCHAR2(10),
+COUNT NUMBER(7),
+CONSTRAINT ORDERS_NO_PK PRIMARY KEY(NO));  --TABLE LEVEL형식 
+
+SELECT * FROM ORDERS;
+SELECT * FROM CUSTOMER;
+
+--위에 커스텀의 넘버거 오더스의 넘버를 참조하는 것임 
+
+ALTER TABLE CUSTOMER
+ADD CONSTRAINT CUSTOMER_NO_FK FOREIGN KEY(NO)
+REFERENCES ORDERS(NO);
+
+SELECT * FROM USER_CONSTRAINTS;
+
+CREATE TABLE CATALOGS 
+(CATALOGNO NUMBER(4) CONSTRAINT CATALOGS_CATALOGNO_PK PRIMARY KEY,
+NAME VARCHAR2(10),
+NO NUMBER(4) CONSTRAINT CATALOGS_NO_FK REFERENCES ORDERS(NO));
+
+--포린키가 오더스의 피케이를 참조한다 
+
+SELECT * FROM ORDERS;
+
+INSERT INTO ORDERS VALUES (10,111,'AAA',11);
+INSERT INTO ORDERS VALUES (20,222,'BBB',22);
+INSERT INTO ORDERS VALUES (30,333,'CCC',33);
+
+COMMIT; --인서트실행하면 항상 커밋해줘야한다
+
+SELECT * FROM CUSTOMER;
+
+INSERT INTO CUSTOMER VALUES(111, 'SUZI',10);
+INSERT INTO CUSTOMER VALUES(222, 'INNA',30);
+INSERT INTO CUSTOMER VALUES(333, 'INSUN',40); --X
+
+SELECT * FROM CATALOGS;
+
+INSERT INTO CATALOGS VALUES(777, 'SUZI',20);
+INSERT INTO CATALOGS VALUES(888, 'INNA',30);
+INSERT INTO CATALOGS VALUES(999, 'INA',40); --X
+
+DELETE ORDERS WHERE NO=20;
+--integrity constraint (KIM.CUSTOMER_NO_FK) violated -child record found --참조하고 있는 데이터를 발견했다
+
+DELETE CATALOGS WHERE NO=20;
+
+SELECT * FROM CATALOGS;
+
+COMMIT;
+
+SELECT * FROM ORDERS;
+
+--UNIQUE 
+--ORACLE : NULL허용
+--MS-SQL : 1번만 허용
+SELECT * FROM ORDERS;
+DESC ORDERS;
+
+ALTER TABLE ORDERS 
+ADD CONSTRAINT ORDERS_SNO_UK UNIQUE(SNO);
+
+SELECT * FROM ORDERS;
+
+INSERT INTO ORDERS VALUES (40,'','DDD',44);
+INSERT INTO ORDERS VALUES (50,'','EEE',55);
+INSERT INTO ORDERS VALUES (60,333,'FFF',66); 
+--위에 333이 들어가있어서 유니크 제약조건에 위배되었다 unique constraint (KIM.ORDERS_NO_PK) violated
+
+--CHECK 제약조건
+SELECT * FROM ORDERS;
+
+ALTER TABLE ORDERS 
+ADD CONSTRAINT ORDERS_SNO_CK CHECK(SNO BETWEEN 100 AND 500);
+INSERT INTO ORDERS VALUES (60,501,'FFF',66);--X
+
+--NOT NULL 
+ALTER TABLE ORDERS
+ADD CONSTRAINT ORDERS_NAME_NN CHECK(NAME IS NOT NULL); --체크제약조건으로 낫널을만듦
+
+DESC ORDERS;
+
+SELECT * FROM USER_CONSTRAINTS;
+
+CREATE TABLE TEST1
+(NO NUMBER(4) CONSTRAINT TEST1_NO_NN NOT NULL); --그냥 낫널은 준것
+
+--삭제방법
+ALTER TABLE TEST1
+DROP CONSTRAINT TEST1_NO_NN;
+
+
+ALTER TABLE ORDERS
+DROP CONSTRAINT ORDERS_NO_PK;
+
+
+--DICTIONARY 
+
+SELECT COUNT(*) FROM DICTIONARY;
+
+SELECT * FROM DICTIONARY;
+
+SELECT * FROM USER_CONSTRAINTS; --제약조건의 정보를 저장하고 있는 딕셔너리 
+
+--USER_ : USER 소유의 OBJECT정보
+--ALL_ : USER에게 ACCESS가 허용된 OBJECT정보
+--DBA_ : DBA권한을 가진 USER가 ACCESS할수 있는 정보
+--V$ : SERVER의 성능에 관련된 정보 
+
+SELECT * FROM V$VERSION;
+
+SELECT * FROM ALL_CONSTRAINTS;
+--제약조건은 끝에가 S 복수이다
+SELECT * FROM ALL_CONS_COLUMNS WHERE TABLE_NAME='ORDERS';
+--어떤제약조건이 어떤테이블에 어떤컬럼에 들어가있다
+
+--SELECT * FROM DBA_CONS_COLUMNS;
+SELECT * FROM USER_TABLES;
+SELECT * FROM USER_SYS_PRIVS;
+
+
+SELECT * FROM DICTIONARY;
+SELECT * FROM USER_CONS_COLUMNS;
+SELECT * FROM SYSTEM_PRIVILEGE_MAP;
+
+
+-- VIEW-(보안)을 위해 사용
+-- 가상 테이블
+CREATE VIEW PER10_V
+AS
+SELECT * FROM PERSONNEL WHERE DNO=10; --실제테이블
+
+SELECT * FROM USER_VIEWS;
+
+SELECT * FROM PER10_V;
+ 
+SELECT * FROM PER10_V; WHERE PNO=1111; --SELECT 조건절 사용가능 
+
+CREATE VIEW PER20_V
+AS
+SELECT PNO,PNAME,MANAGER,PAY,DNO FROM PERSONNEL;
+
+SELECT * FROM PER20_V;
+
+CREATE VIEW PER_AVG
+AS
+SELECT DNO,AVG(PAY) 평균, SUM(PAY)합계
+FROM PERSONNEL
+GROUP BY DNO;
+
+SELECT * FROM PER_AVG
+WHERE DNO=10;
+
+SELECT * FROM PER_AVG
+WHERE 합계>8000;
+
+INSERT INTO PER20_V VALUES (1234,'JJJ',1001,2000,20);
+
+SELECT * FROM PERSONNEL;
+
+UPDATE PER20_V SET PNAME='AAA' WHERE PNO=1234;
+
+DELETE PER20_V WHERE PNO=1234;
+
+--SIMPLE VIEW 
+--하나의 테이블에서 만든 VIEW 
+--INSERT,UPDATE,DELETE가 가능 -두개이상의 테이블에서 만든뷰는 안된다
+
+SELECT * FROM PERSONNEL;
+
+CREATE VIEW PER
+AS
+SELECT PNAME,JOB,PAY FROM PERSONNEL;
+
+SELECT * FROM PER;
+
+INSERT INTO PER VALUES ('BBB' ,'ACCOUNT',3000);  --PNO에 널값 넣을 수없어에러
+
+
+SELECT * FROM PER_AVG;
+
+INSERT INTO PER_AVG VALUES (40,1234,5000);
+
+--수정
+--CREATE -> ALTER로 수정  뷰는 ALTER로 수정이 안된다
+
+SELECT * FROM USER_VIEWS;
+
+SELECT * FROM PER20_V;
+
+CREATE OR REPLACE VIEW PER20_V --없으면 만들어 있으면 수정해라는 뜻 
+(번호,이름,직업,부서번호)
+AS
+SELECT PNO,PNAME,JOB,DNO FROM PERSONNEL
+WHERE DNO=20;
+
+SELECT * FROM PER20_V; --수정
+
+--삭제
+DROP VIEW PER_AVG;
+SELECT * FROM PER_AVG;
+
+--COMPLEX VIEW 
+--JOIN문으로 만든 VIEW 
+--INSERT, UPDATE, DELETE가 불가 
+
+CREATE TABLE 고객정보
+(고객번호 CHAR(10),
+이름 CHAR(10));
+
+CREATE TABLE 회사정보 
+(고객번호 CHAR(10),
+회사명 CHAR(10));
+
+INSERT INTO 고객정보 VALUES ('A001','홍길동');
+INSERT INTO 고객정보 VALUES ('A002','이순신');
+
+INSERT INTO 회사정보 VALUES ('A001','LG'); 
+INSERT INTO 회사정보 VALUES ('A002','KAKAO');
+
+COMMIT;
+
+SELECT * FROM 고객정보;
+SELECT * FROM 회사정보;
+
+CREATE OR REPLACE VIEW 정보
+AS
+SELECT K.고객번호,이름,회사명 
+FROM 고객정보 K, 회사정보 H
+WHERE K.고객번호  = H.고객번호; 
+
+SELECT * FROM 정보;
+--조인문으로 만든 건 인서트 업데이트 딜리트가 안된다!
+INSERT INTO 정보 VALUES ('A003','배수지','SAMSUNG'); --X
+UPDATE 정보 SET 이름='배수지' WHERE 고객번호='A001'; --X
+DELETE 정보 WHERE 고객번호 = 'A001'; --X
+-------------------------------------------------------- 
+--TOP--N
+--가장 최근에 입사한 5명의 사원의 이름과 입사날짜를 출력하시오 
+
+
+SELECT * FROM PERSONNEL;
+
+SELECT PNAME,STARTDATE 
+FROM PERSONNEL
+ORDER BY STARTDATE DESC;
+
+--ROWNUM 일렬번호로 만드는 옵션
+SELECT ROWNUM,PNAME,STARTDATE FROM (SELECT PNAME,STARTDATE FROM PERSONNEL
+ORDER BY STARTDATE DESC)  --하위커리사용 가장최근에입사한사람순으로 되고
+WHERE ROWNUM<=5;
+
+
+SELECT ROWNUM,PNAME FROM PERSONNEL;
+
+SELECT * FROM (SELECT * FROM CUSTOM WHERE ADDR1='경기도')A;
+
+SELECT ROWNUM,PNAME,STARTDATE FROM (SELECT PNAME,STARTDATE FROM PERSONNEL
+ORDER BY STARTDATE DESC);
+
+--범위값 구하기(3~6) 한번 더 감싸고 조건줘야함 ROWRUM을 RNUM으로 씀 공식임 외워라
+SELECT RNUM,PNAME,STARTDATE FROM\
+(SELECT ROWNUM RNUM,PNAME,STARTDATE FROM 
+(SELECT PNAME,STARTDATE FROM PERSONNEL
+ORDER BY STARTDATE DESC))  
+WHERE RNUM >=3 AND RNUM<=6;
+--게시판 만들때 사용 누가 삭제하고 지우면 그칸을 메꿔줌? 한페이지에 출력하고 누가
+--지우면 그칸을 넣어주는 공백?
+
+--MS-SQL 
+--SELECT TOP 5 PNAME,STARTDATE FOR PERSONNEL; ORDER BY STARTDATE DESC;
+--SELECT TOP 5 PERCENT PNAME,STARTDATE FOR PERSONNEL; ORDER BY STARTDATE DESC;
+
+--SYNONYM(동의어)
+CREATE SYNONYM INSA
+FOR KIM.PERSONNEL;
+
+SELECT * FROM INSA;
+SELECT * FROM KIM.PERSONNEL;
+SELECT * FROM PERSONNEL;
+
+SELECT ROWID,PNAME FROM PERSONNEL;
+
+SELECT * FROM PERSONNEL WHERE PNO=1111;
+
+CREATE INDEX PER_PAY_INDEX
+ON PERSONNEL(PAY);  --테이블이 있으면 삼각형의 구조가 완성된다 
+
+SELECT * FROM USER_INDEXES;
+
+CREATE TABLE AAA
+(ID NUMBER CONSTRAINT AAA_ID_INDEX PRIMARY KEY,
+NAME CHAR(10));
+
+SELECT * FROM USER_CONSTRAINTS;
+SELECT * FROM USER_INDEXES;
+
+--SEQUENCE(일련번호)
+
+/*
+CREATE SEQUENCE DIV_NO
+INCREMENT BY 1
+START WITH 1 
+MAXVALUE 100 || NOMAXVALUE   --최대값없이 계속 늘어나라 
+CYCLE || NOCYCLE 
+NOCACHE 많은 양의 데이터를 갑자기 넣을때 
+CHCHE 20 || NOCACHE
+*/
+
+CREATE SEQUENCE PER_PNO
+START WITH 90    --시작값
+INCREMENT BY 1  --증가값
+MAXVALUE 99   --최대99까지
+NOCYCLE  --반복값없음
+NOCACHE; --메모리상에올리지마라
+
+SELECT * FROM USER_SEQUENCES;
+
+--NEXTVAL : SEQUENCE의 사용 번호(SEQUENCE이름 NEXTVAL) 
+--CURRVAL : SEQUENCE의 현재 번호(SEQUENCE이름 CURRVAL) 
+
+SELECT PER_PNO.NEXTVAL FROM DUAL;
+
+INSERT INTO DIVISION (DNO,DNAME,POSITION)
+VALUES (PER_PNO.NEXTVAL, 'EDV','KOREA');
+
+SELECT * FROM DIVISION; --한발씩 쏘는 개념이다 총이 하나씩 쏘면 단다고 생각하면 된다 
+
+SELECT PER_PNO.CURRVAL FROM DUAL; --마지막으로 쏜 총의 번호가 뭐야?
+
+ALTER SEQUENCE PER_PNO--수정할때 사용
+INCREMENT BY 1
+MAXVALUE 999
+CACHE 10   --1O개의 숫자가 메모리에 올라가서 숫자값을 읽어와서 인서트시킴 
+NOCYCLE;
+
+SELECT * FROM USER_SEQUENCES;
+
+
+
